@@ -1,0 +1,112 @@
+body{
+font-family:Arial, sans-serif;
+margin:0;
+background:white;
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+border-bottom:1px solid #eee;
+}
+
+.logo{
+font-weight:bold;
+font-size:22px;
+}
+
+nav a{
+margin:0 10px;
+text-decoration:none;
+color:#333;
+}
+
+.btn-primary{
+background:black;
+color:white;
+padding:10px 18px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.hero{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:100px 80px;
+}
+
+.hero-text{
+max-width:500px;
+}
+
+.hero-text h1{
+font-size:48px;
+}
+
+.hero-img img{
+width:500px;
+border-radius:10px;
+}
+
+.features{
+text-align:center;
+padding:80px;
+}
+
+.grid{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.card{
+background:#f5f5f5;
+padding:30px;
+border-radius:10px;
+width:220px;
+}
+
+.pricing{
+text-align:center;
+padding:80px;
+}
+
+.pricing-grid{
+display:flex;
+justify-content:center;
+gap:30px;
+}
+
+.price-card{
+background:#f5f5f5;
+padding:40px;
+border-radius:10px;
+width:200px;
+}
+
+.popular{
+border:2px solid black;
+}
+
+.contact{
+padding:80px;
+text-align:center;
+}
+
+.contact input,
+.contact textarea{
+width:300px;
+padding:10px;
+margin:10px;
+}
+
+footer{
+text-align:center;
+padding:30px;
+border-top:1px solid #eee;
+}

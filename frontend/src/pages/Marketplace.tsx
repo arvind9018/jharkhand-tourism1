@@ -1,62 +1,36 @@
 import { useEffect, useState } from "react"
+import { fetchProducts, fetchProductsByCategory, type Product } from "../services/api"
 
-interface Product {
-  id: number
-  name: string
-  category: string
-  artisan: string
-  village: string
-  price: number
-  rating: number
-  image: string
-}
-
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    name: "Dokra Tribal Horse",
-    category: "Dokra",
-    artisan: "Birsa Hansda",
-    village: "Khunti",
-    price: 2500,
-    rating: 4.8,
-    image: "https://picsum.photos/400/300?craft1",
-  },
-  {
-    id: 2,
-    name: "Paitkar Scroll Painting",
-    category: "Paitkar",
-    artisan: "Sita Devi",
-    village: "Amadubi",
-    price: 1800,
-    rating: 4.6,
-    image: "https://picsum.photos/400/300?craft2",
-  },
-  {
-    id: 3,
-    name: "Bamboo Hand Basket",
-    category: "Bamboo",
-    artisan: "Ramesh Munda",
-    village: "Simdega",
-    price: 900,
-    rating: 4.5,
-    image: "https://picsum.photos/400/300?craft3",
-  },
-]
+const categories = ["All", "Dokra", "Paitkar", "Bamboo"]
 
 export default function Marketplace() {
   const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState("All")
 
   useEffect(() => {
-    // Replace with backend API later
-    setProducts(mockProducts)
-  }, [])
+    loadProducts()
+  }, [category])
 
-  const filtered =
-    category === "All"
-      ? products
-      : products.filter(p => p.category === category)
+  const loadProducts = async () => {
+    setLoading(true)
+    let data
+    if (category === "All") {
+      data = await fetchProducts()
+    } else {
+      data = await fetchProductsByCategory(category)
+    }
+    setProducts(data)
+    setLoading(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-secondary min-h-screen px-6 sm:px-10 py-10 flex justify-center">
+        <p>Loading products...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-secondary min-h-screen px-6 sm:px-10 py-10">
@@ -79,16 +53,15 @@ export default function Marketplace() {
           onChange={e => setCategory(e.target.value)}
           className="px-4 py-3 rounded-lg border"
         >
-          <option>All</option>
-          <option>Dokra</option>
-          <option>Paitkar</option>
-          <option>Bamboo</option>
+          {categories.map(c => (
+            <option key={c}>{c}</option>
+          ))}
         </select>
       </div>
 
       {/* PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map(p => (
+        {products.map(p => (
           <div
             key={p.id}
             className="bg-white rounded-xl shadow hover:scale-105 transition"
@@ -107,6 +80,9 @@ export default function Marketplace() {
 
               <div className="mt-2 text-sm">
                 ⭐ {p.rating} | Category: {p.category}
+                {p.description && (
+                  <p className="text-xs text-gray-500 mt-1">{p.description}</p>
+                )}
               </div>
 
               <div className="mt-3 flex justify-between items-center">
@@ -123,7 +99,7 @@ export default function Marketplace() {
       </div>
 
       {/* EMPTY STATE */}
-      {filtered.length === 0 && (
+      {products.length === 0 && (
         <p className="text-center text-gray-500 mt-20">
           No products found.
         </p>
