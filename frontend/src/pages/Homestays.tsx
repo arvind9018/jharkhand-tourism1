@@ -421,7 +421,7 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
         />
         
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-          ⭐ {homestay.rating?.average?.toFixed(1) || '4.5'}
+          ⭐ {homestay.rating?.toFixed(1) || '4.5'}
         </div>
 
         <div className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>

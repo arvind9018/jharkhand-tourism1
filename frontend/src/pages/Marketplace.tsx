@@ -93,7 +93,7 @@ export default function Marketplace() {
               </p>
 
               <div className="mt-2 text-sm">
-                ⭐ {p.rating?.average || '4.8'} | Category: {p.category}
+                ⭐ {p.rating || '4.8'} | Category: {p.category}
                 {p.description && (
                   <p className="text-xs text-gray-500 mt-1">{p.description}</p>
                 )}

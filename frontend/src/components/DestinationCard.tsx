@@ -8,7 +8,7 @@ interface Props {
 
 export default function DestinationCard({ destination }: Props) {
   // Debug - remove after fixing
-  console.log('DestinationCard rendering:', destination.name, 'Rating:', destination.rating?.average)
+  console.log('DestinationCard rendering:', destination.name, 'Rating:', destination.rating?.toFixed(1))
 
   // Ensure destination has an ID
   if (!destination || !destination.id) {
@@ -17,14 +17,14 @@ export default function DestinationCard({ destination }: Props) {
   }
 
   // Get rating value safely
-  const ratingValue = destination.rating?.average || 4.5
+  const ratingValue = destination.rating ?? 4.5
 
   return (
     <Link to={`/destinations/${destination.id}`}>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group">
         <div className="relative h-56 overflow-hidden">
           <img
-            src={destination.image || (destination.images?.[0]?.url) || 'https://via.placeholder.com/400x300'}
+            src={destination.image || (destination.images?.[0]) || 'https://via.placeholder.com/400x300'}
             alt={destination.name}
             className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
             onError={(e) => {
