@@ -42,6 +42,10 @@ export default function Destinations() {
         fetchCategories(),
         fetchDistricts()
       ])
+      
+      // Debug: Log destinations to see IDs
+      console.log('Loaded destinations:', dests.map(d => ({ id: d.id, name: d.name, type: typeof d.id })))
+      
       setDestinations(dests)
       setCategories(['All', ...cats.filter(c => c !== 'All')])
       setDistricts(['All Districts', ...dists])
@@ -87,7 +91,7 @@ export default function Destinations() {
         result.sort((a, b) => a.name.localeCompare(b.name))
         break
       case 'rating':
-        result.sort((a, b) => (b.rating || 0) - (a.rating || 0))
+        result.sort((a, b) => (b.rating?.average || 0) - (a.rating?.average || 0))
         break
       default: // popularity
         result.sort((a, b) => (b.visitors || 0) - (a.visitors || 0))
@@ -345,18 +349,23 @@ function PaginationButton({ children, active = false }: { children: React.ReactN
 }
 
 function DestinationListItem({ destination }: { destination: Destination }) {
+  const ratingValue = destination.rating?.average || 4.5
+  
   return (
     <Link to={`/destinations/${destination.id}`}>
       <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition p-4 flex gap-6">
         <img
-          src={destination.image || 'https://via.placeholder.com/150'}
+          src={destination.image || (destination.images?.[0]?.url) || 'https://via.placeholder.com/150'}
           alt={destination.name}
           className="w-32 h-32 rounded-lg object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=No+Image'
+          }}
         />
         <div className="flex-1">
           <div className="flex justify-between items-start">
             <h3 className="text-xl font-bold text-primary">{destination.name}</h3>
-            <span className="text-accent font-semibold">⭐ {destination.rating || '4.5'}</span>
+            <span className="text-accent font-semibold">⭐ {ratingValue.toFixed(1)}</span>
           </div>
           <p className="text-sm text-gray-600 mb-2">{destination.district}</p>
           <p className="text-gray-700 line-clamp-2">{destination.description}</p>

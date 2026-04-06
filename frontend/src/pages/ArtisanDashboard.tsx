@@ -1,11 +1,11 @@
 // src/pages/ArtisanDashboard.tsx
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { getStoredUser } from "../services/authApi"
 import DashboardCard from "../components/DashboardCard"
 
 export default function ArtisanDashboard() {
-  const [user, setUser] = useState(getStoredUser())
+  const [user] = useState(getStoredUser())
 
   return (
     <div className="min-h-screen bg-secondary py-10 px-6">

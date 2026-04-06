@@ -4,6 +4,10 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
+import contactRoutes from './routes/contact.routes.js';
+import destinationRoutes from './routes/destination.routes.js';
+import homestayRoutes from './routes/homestay.routes.js';
+import productRoutes from './routes/product.routes.js';
 
 dotenv.config();
 
@@ -24,12 +28,16 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/destinations', destinationRoutes);
+app.use('/api/homestays', homestayRoutes);
+app.use('/api/products', productRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    message: 'Server is running',
+  res.json({ 
+    status: 'OK', 
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString()
   });
 });
@@ -40,8 +48,31 @@ app.get('/', (req, res) => {
     message: 'Jharkhand Tourism API',
     version: '1.0.0',
     endpoints: {
-      signup: 'POST /api/auth/signup',
-      login: 'POST /api/auth/login',
+      auth: {
+        signup: 'POST /api/auth/signup',
+        login: 'POST /api/auth/login',
+        me: 'GET /api/auth/me',
+        profile: 'PUT /api/auth/profile'
+      },
+      contact: {
+        send: 'POST /api/contact'
+      },
+      destinations: {
+        getAll: 'GET /api/destinations',
+        getFeatured: 'GET /api/destinations/featured',
+        getById: 'GET /api/destinations/:id',
+        getCategories: 'GET /api/destinations/categories',
+        getDistricts: 'GET /api/destinations/districts'
+      },
+      homestays: {
+        getAll: 'GET /api/homestays',
+        getById: 'GET /api/homestays/:id'
+      },
+      products: {
+        getAll: 'GET /api/products',
+        getByCategory: 'GET /api/products/category/:category',
+        getById: 'GET /api/products/:id'
+      },
       health: 'GET /health'
     }
   });

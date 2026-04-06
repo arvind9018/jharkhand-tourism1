@@ -2,6 +2,9 @@
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import { isAuthenticated, getUserRole, logoutUser, getStoredUser, type User } from "../services/authApi"
+import { useCart } from "../context/CartContext"
+import { ShoppingCart } from 'lucide-react'
+
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -12,6 +15,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const menuRef = useRef<HTMLDivElement>(null)
 
+  const { cartCount } = useCart()
   // Check auth status on mount and when localStorage changes
   useEffect(() => {
     checkAuthStatus()
@@ -137,6 +141,14 @@ export default function Navbar() {
           <NavItem to="/map">GIS Map</NavItem>
           <NavItem to="/homestays">Homestays</NavItem>
           <NavItem to="/marketplace">Marketplace</NavItem>
+          <Link to="/cart" className="relative">
+    <ShoppingCart className="w-6 h-6 text-white hover:text-accent transition" />
+    {cartCount > 0 && (
+      <span className="absolute -top-2 -right-2 bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+        {cartCount}
+      </span>
+    )}
+  </Link>
 
           {/* Auth Section */}
           <div className="relative" ref={menuRef}>
@@ -285,6 +297,21 @@ export default function Navbar() {
           
           {/* Mobile Auth Options */}
           <div className="pt-3 border-t border-white/20">
+          <Link
+    to="/cart"
+    onClick={() => setOpen(false)}
+    className="flex items-center justify-between border-b border-white/10 pb-2"
+  >
+    <span className="flex items-center gap-2">
+      <ShoppingCart className="w-5 h-5" />
+      Cart
+    </span>
+    {cartCount > 0 && (
+      <span className="bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+        {cartCount}
+      </span>
+    )}
+  </Link>
             {isLoggedIn ? (
               <>
                 {/* User Info */}

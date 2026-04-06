@@ -1,7 +1,7 @@
-// pages/ResetPassword.tsx
+// src/pages/ResetPassword.tsx
 import { useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
-
+import { resetPassword } from "../services/authApi"  // ✅ Add this import
 
 export default function ResetPassword() {
   const { token } = useParams()
@@ -23,7 +23,7 @@ export default function ResetPassword() {
     setError("")
 
     try {
-      await resetPassword({ token: token!, newPassword: password })
+      await resetPassword({ token: token!, newPassword: password })  // ✅ Now works
       navigate("/login")
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to reset password")

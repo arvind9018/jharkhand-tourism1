@@ -55,6 +55,14 @@ export interface AuthResponse {
   };
 }
 
+export interface OAuthData {
+  name: string;
+  email: string;
+  googleId?: string;
+  facebookId?: string;
+  avatar?: string;
+}
+
 export interface DashboardStats {
   totalTourists: {
     value: number;
@@ -234,7 +242,10 @@ export const updateProfile = async (userData: Partial<User>): Promise<User> => {
     const response = await api.put('/auth/profile', userData);
     
     if (response.data.success && response.data.data) {
-      updateStoredUser(response.data.data);
+      // Update stored user
+      const currentUser = getStoredUser();
+      const updatedUser = { ...currentUser, ...response.data.data };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
       return response.data.data;
     }
     throw new Error('Failed to update profile');
@@ -256,6 +267,40 @@ export const changePassword = async (data: {
     return response.data;
   } catch (error) {
     console.error('Change password error:', error);
+    throw error;
+  }
+};
+
+// Google OAuth Login
+export const googleLogin = async (credential: string): Promise<AuthResponse> => {
+  try {
+    const response = await api.post('/auth/google', { credential });
+    
+    if (response.data.success && response.data.data?.token) {
+      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.data.user));
+    }
+    
+    return response.data;
+  } catch (error: any) {
+    console.error('Google login error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Facebook OAuth Login
+export const facebookLogin = async (accessToken: string, userID: string): Promise<AuthResponse> => {
+  try {
+    const response = await api.post('/auth/facebook', { accessToken, userID });
+    
+    if (response.data.success && response.data.data?.token) {
+      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.data.user));
+    }
+    
+    return response.data;
+  } catch (error: any) {
+    console.error('Facebook login error:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -793,6 +838,22 @@ export const fetchVendorDashboard = async () => {
   }
 };
 
+
+
+export const forgotPassword = async (email: string) => {
+  const response = await api.post('/auth/forgot-password', { email })
+  return response.data
+}
+
+export const resetPassword = async (data: { token: string; newPassword: string }) => {
+  const response = await api.post('/auth/reset-password', data)
+  return response.data
+}
+
+export const verifyEmail = async (token: string) => {
+  const response = await api.get(`/auth/verify-email/${token}`)
+  return response.data
+}
 // ==================== EXPORT ALL ====================
 export default {
   // Auth functions

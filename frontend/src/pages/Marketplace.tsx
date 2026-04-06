@@ -1,5 +1,7 @@
+// pages/Marketplace.tsx
 import { useEffect, useState } from "react"
 import { fetchProducts, fetchProductsByCategory, type Product } from "../services/api"
+import { useCart } from "../context/CartContext" // Import cart hook
 
 const categories = ["All", "Dokra", "Paitkar", "Bamboo"]
 
@@ -7,6 +9,8 @@ export default function Marketplace() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState("All")
+  const { addToCart } = useCart() // Use cart hook
+  const [addedToCart, setAddedToCart] = useState<{ [key: string]: boolean }>({})
 
   useEffect(() => {
     loadProducts()
@@ -22,6 +26,16 @@ export default function Marketplace() {
     }
     setProducts(data)
     setLoading(false)
+  }
+
+  const handleAddToCart = (product: Product) => {
+    addToCart(product)
+    
+    // Show feedback
+    setAddedToCart(prev => ({ ...prev, [product.id]: true }))
+    setTimeout(() => {
+      setAddedToCart(prev => ({ ...prev, [product.id]: false }))
+    }, 2000)
   }
 
   if (loading) {
@@ -64,7 +78,7 @@ export default function Marketplace() {
         {products.map(p => (
           <div
             key={p.id}
-            className="bg-white rounded-xl shadow hover:scale-105 transition"
+            className="bg-white rounded-xl shadow hover:scale-105 transition group"
           >
             <img
               src={p.image}
@@ -79,7 +93,7 @@ export default function Marketplace() {
               </p>
 
               <div className="mt-2 text-sm">
-                ⭐ {p.rating} | Category: {p.category}
+                ⭐ {p.rating?.average || '4.8'} | Category: {p.category}
                 {p.description && (
                   <p className="text-xs text-gray-500 mt-1">{p.description}</p>
                 )}
@@ -89,8 +103,15 @@ export default function Marketplace() {
                 <p className="font-semibold text-accent">
                   ₹{p.price}
                 </p>
-                <button className="bg-accent text-white px-4 py-2 rounded-lg">
-                  Add to Cart
+                <button 
+                  onClick={() => handleAddToCart(p)}
+                  className={`px-4 py-2 rounded-lg transition ${
+                    addedToCart[p.id]
+                      ? 'bg-green-500 text-white'
+                      : 'bg-accent text-white hover:bg-opacity-90'
+                  }`}
+                >
+                  {addedToCart[p.id] ? '✓ Added!' : 'Add to Cart'}
                 </button>
               </div>
             </div>
