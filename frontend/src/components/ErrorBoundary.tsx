@@ -1,5 +1,5 @@
-// components/ErrorBoundary.tsx
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+// src/components/ErrorBoundary.tsx
+import { Component, ErrorInfo, ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
@@ -31,7 +31,6 @@ class ErrorBoundary extends Component<Props, State> {
     console.error('Error caught by boundary:', error, errorInfo)
     this.setState({ errorInfo })
     
-    // Call optional onError callback
     if (this.props.onError) {
       this.props.onError(error, errorInfo)
     }
@@ -43,12 +42,10 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      // Custom fallback UI
       if (this.props.fallback) {
         return this.props.fallback
       }
       
-      // Default fallback UI
       return (
         <div className="min-h-[200px] flex items-center justify-center p-6">
           <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
@@ -60,7 +57,7 @@ class ErrorBoundary extends Component<Props, State> {
               <p className="text-gray-600 mb-4">
                 {this.state.error?.message || 'An unexpected error occurred'}
               </p>
-              {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
+              {import.meta.env.DEV && this.state.errorInfo && (
                 <details className="text-left mb-4 p-3 bg-gray-50 rounded-lg text-xs">
                   <summary className="cursor-pointer text-accent mb-2">
                     Error Details

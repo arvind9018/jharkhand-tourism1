@@ -7,17 +7,32 @@ interface Props {
 }
 
 export default function DestinationCard({ destination }: Props) {
+  // Debug - remove after fixing
+  console.log('DestinationCard rendering:', destination.name, 'Rating:', destination.rating?.average)
+
+  // Ensure destination has an ID
+  if (!destination || !destination.id) {
+    console.error('DestinationCard: Invalid destination data', destination)
+    return null
+  }
+
+  // Get rating value safely
+  const ratingValue = destination.rating?.average || 4.5
+
   return (
     <Link to={`/destinations/${destination.id}`}>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group">
         <div className="relative h-56 overflow-hidden">
           <img
-            src={destination.image || 'https://via.placeholder.com/400x300'}
+            src={destination.image || (destination.images?.[0]?.url) || 'https://via.placeholder.com/400x300'}
             alt={destination.name}
             className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=No+Image'
+            }}
           />
           <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold">
-            ⭐ {destination.rating || '4.5'}
+            ⭐ {ratingValue.toFixed(1)}
           </div>
           {destination.category && (
             <div className="absolute bottom-4 left-4 bg-accent/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs">
@@ -38,7 +53,6 @@ export default function DestinationCard({ destination }: Props) {
           </p>
           <div className="flex justify-between items-center">
             <span className="text-accent font-semibold text-sm">Learn more →</span>
-            <span className="text-xs text-gray-500">12 km away</span>
           </div>
         </div>
       </div>

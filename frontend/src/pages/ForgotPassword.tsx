@@ -1,7 +1,7 @@
-// pages/ForgotPassword.tsx
+// src/pages/ForgotPassword.tsx
 import { useState } from "react"
 import { Link } from "react-router-dom"
-
+import { forgotPassword } from "../services/authApi"  // ✅ Add this import
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("")
@@ -16,7 +16,7 @@ export default function ForgotPassword() {
     setMessage("")
 
     try {
-      const response = await forgotPassword(email)
+      const response = await forgotPassword(email)  // ✅ Now this works
       setMessage(response.message || "Password reset email sent!")
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to send reset email")

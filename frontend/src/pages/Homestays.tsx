@@ -1,7 +1,8 @@
 // pages/Homestays.tsx
 import { useEffect, useState, useMemo } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom" // Added useNavigate
 import { fetchHomestays, searchHomestays, type Homestay } from "../services/api"
+import { isAuthenticated } from "../services/authApi" // Added to check login
 
 // Types
 interface FilterState {
@@ -14,6 +15,7 @@ interface FilterState {
 }
 
 export default function Homestays() {
+  const navigate = useNavigate() // Added for navigation
   const [data, setData] = useState<Homestay[]>([])
   const [loading, setLoading] = useState(true)
   const [showFilters, setShowFilters] = useState(false)
@@ -30,7 +32,7 @@ export default function Homestays() {
     sortBy: 'popularity'
   })
 
-  // Available amenities (would come from API in real app)
+  // Available amenities
   const availableAmenities = ["WiFi", "Meals", "Parking", "Guide Service", "Pickup", "Kitchen", "AC", "Hot Water"]
 
   useEffect(() => {
@@ -49,11 +51,10 @@ export default function Homestays() {
     }
   }
 
-  // Filter and sort data
+  // Filter and sort data (your existing code)
   const filteredData = useMemo(() => {
     let filtered = [...data]
 
-    // Search filter
     if (filters.search) {
       const searchLower = filters.search.toLowerCase()
       filtered = filtered.filter(h => 
@@ -64,7 +65,6 @@ export default function Homestays() {
       )
     }
 
-    // Price filter
     if (filters.priceRange !== "Any Price") {
       filtered = filtered.filter(h => {
         if (filters.priceRange === "Below ₹1000") return h.price < 1000
@@ -75,25 +75,21 @@ export default function Homestays() {
       })
     }
 
-    // Guest filter
     if (filters.guestCount !== "Guests") {
       const minGuests = parseInt(filters.guestCount.split('-')[0].trim())
       filtered = filtered.filter(h => h.capacity >= minGuests)
     }
 
-    // Amenities filter
     if (filters.amenities.length > 0) {
       filtered = filtered.filter(h => 
         filters.amenities.every(a => h.amenities?.includes(a))
       )
     }
 
-    // Rating filter
     if (filters.rating) {
       filtered = filtered.filter(h => h.rating >= filters.rating!)
     }
 
-    // Sorting
     switch (filters.sortBy) {
       case 'price-low':
         filtered.sort((a, b) => a.price - b.price)
@@ -104,7 +100,7 @@ export default function Homestays() {
       case 'rating':
         filtered.sort((a, b) => b.rating - a.rating)
         break
-      default: // popularity - use rating as proxy
+      default:
         filtered.sort((a, b) => b.rating - a.rating)
     }
 
@@ -131,9 +127,49 @@ export default function Homestays() {
     })
   }
 
+  // ✅ UPDATED: Handle Book Now with login check and navigation to payment
   const handleBookNow = (homestay: Homestay) => {
+    // Check if user is logged in
+    if (!isAuthenticated()) {
+      // Redirect to login with return URL
+      navigate('/login', { state: { from: '/homestays' } })
+      return
+    }
+    
+    // Store selected homestay in state
     setSelectedHomestay(homestay)
     setShowBookingModal(true)
+  }
+
+  // ✅ NEW: Handle booking confirmation - navigate to payment
+  const handleBookingConfirm = (bookingDetails: any) => {
+    // Calculate total nights
+    const checkIn = new Date(bookingDetails.checkIn)
+    const checkOut = new Date(bookingDetails.checkOut)
+    const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24))
+    
+    // Create booking object
+    const booking = {
+      id: Date.now(), // Temporary ID - backend would generate
+      type: 'Homestay',
+      name: selectedHomestay?.name,
+      location: `${selectedHomestay?.village}, ${selectedHomestay?.district}`,
+      image: selectedHomestay?.image,
+      checkIn: bookingDetails.checkIn,
+      checkOut: bookingDetails.checkOut,
+      guests: bookingDetails.guests,
+      price: selectedHomestay?.price || 0,
+      totalNights: nights,
+      totalAmount: (selectedHomestay?.price || 0) * nights + 800, // + fees
+      status: 'pending',
+      paymentStatus: 'pending'
+    }
+    
+    // Navigate to payment page with booking data
+    navigate('/payment', { state: { booking } })
+    
+    // Close modal
+    setShowBookingModal(false)
   }
 
   if (loading) {
@@ -150,7 +186,7 @@ export default function Homestays() {
   return (
     <div className="min-h-screen bg-secondary">
       
-      {/* HERO SECTION */}
+      {/* HERO SECTION (your existing code) */}
       <section className="relative bg-gradient-to-r from-primary to-primary-dark text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
@@ -193,13 +229,12 @@ export default function Homestays() {
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
+      {/* MAIN CONTENT (your existing code - no changes) */}
       <div className="max-w-7xl mx-auto px-6 sm:px-10 py-12">
         
         {/* SEARCH AND FILTER BAR */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
             <div className="flex-1">
               <div className="relative">
                 <span className="absolute left-3 top-3 text-gray-400">🔍</span>
@@ -212,7 +247,6 @@ export default function Homestays() {
               </div>
             </div>
 
-            {/* Quick Filters */}
             <select 
               value={filters.priceRange}
               onChange={(e) => setFilters(prev => ({ ...prev, priceRange: e.target.value }))}
@@ -248,7 +282,6 @@ export default function Homestays() {
               <option value="price-high">Sort by: Price (High to Low)</option>
             </select>
 
-            {/* Filter Toggle Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="lg:hidden bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition"
@@ -257,11 +290,9 @@ export default function Homestays() {
             </button>
           </div>
 
-          {/* Advanced Filters */}
           {showFilters && (
             <div className="mt-6 pt-6 border-t">
               <div className="grid md:grid-cols-2 gap-8">
-                {/* Amenities */}
                 <div>
                   <h3 className="font-semibold text-primary mb-3">Amenities</h3>
                   <div className="flex flex-wrap gap-3">
@@ -279,7 +310,6 @@ export default function Homestays() {
                   </div>
                 </div>
 
-                {/* Rating Filter */}
                 <div>
                   <h3 className="font-semibold text-primary mb-3">Minimum Rating</h3>
                   <div className="flex gap-3">
@@ -303,7 +333,6 @@ export default function Homestays() {
                 </div>
               </div>
 
-              {/* Clear Filters */}
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={clearFilters}
@@ -316,7 +345,6 @@ export default function Homestays() {
           )}
         </div>
 
-        {/* RESULTS COUNT */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-gray-600">
             <span className="font-semibold text-accent">{filteredData.length}</span> homestays found
@@ -326,7 +354,6 @@ export default function Homestays() {
           </p>
         </div>
 
-        {/* HOMESTAY GRID */}
         {filteredData.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">🏡</div>
@@ -351,7 +378,6 @@ export default function Homestays() {
           </div>
         )}
 
-        {/* PAGINATION */}
         {filteredData.length > 9 && (
           <div className="mt-12 flex justify-center gap-2">
             <button className="w-10 h-10 rounded-lg border hover:bg-accent hover:text-white transition">1</button>
@@ -363,23 +389,19 @@ export default function Homestays() {
         )}
       </div>
 
-      {/* BOOKING MODAL */}
+      {/* ✅ UPDATED: Booking Modal with connection to payment */}
       {showBookingModal && selectedHomestay && (
         <BookingModal
           homestay={selectedHomestay}
           onClose={() => setShowBookingModal(false)}
-          onConfirm={(details) => {
-            console.log('Booking confirmed:', details)
-            setShowBookingModal(false)
-          }}
+          onConfirm={handleBookingConfirm} // Updated to use new handler
         />
       )}
     </div>
   )
 }
 
-/* ---------------- Homestay Card Component ---------------- */
-
+/* ---------------- Homestay Card Component (your existing code) ---------------- */
 function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: () => void }) {
   const [imageError, setImageError] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -390,7 +412,6 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Image Container */}
       <div className="relative h-56 overflow-hidden">
         <img
           src={imageError ? 'https://via.placeholder.com/400x300?text=Homestay' : homestay.image}
@@ -399,12 +420,10 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
           onError={() => setImageError(true)}
         />
         
-        {/* Rating Badge */}
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-          ⭐ {homestay.rating.toFixed(1)}
+          ⭐ {homestay.rating?.average?.toFixed(1) || '4.5'}
         </div>
 
-        {/* Quick View Overlay */}
         <div className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
           <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-accent hover:text-white transition">
             Quick View
@@ -412,7 +431,6 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-6">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-xl font-bold text-primary group-hover:text-accent transition">
@@ -427,7 +445,6 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
           <span>📍</span> {homestay.village}, {homestay.district}
         </p>
 
-        {/* Amenities Preview */}
         {homestay.amenities && (
           <div className="flex flex-wrap gap-2 mb-4">
             {homestay.amenities.slice(0, 3).map((amenity, idx) => (
@@ -446,14 +463,12 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
           </div>
         )}
 
-        {/* Description */}
         {homestay.description && (
           <p className="text-sm text-gray-500 mb-4 line-clamp-2">
             {homestay.description}
           </p>
         )}
 
-        {/* Capacity */}
         <div className="flex items-center gap-4 mb-4 text-sm">
           <span className="flex items-center gap-1">
             <span>👥</span> Up to {homestay.capacity} guests
@@ -465,7 +480,6 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
           )}
         </div>
 
-        {/* Price and Booking */}
         <div className="flex justify-between items-center pt-4 border-t">
           <div>
             <p className="text-xs text-gray-500">Starting from</p>
@@ -486,8 +500,7 @@ function HomestayCard({ homestay, onBookNow }: { homestay: Homestay; onBookNow: 
   )
 }
 
-/* ---------------- Booking Modal Component ---------------- */
-
+/* ---------------- Updated Booking Modal Component ---------------- */
 function BookingModal({ homestay, onClose, onConfirm }: { 
   homestay: Homestay; 
   onClose: () => void;
@@ -498,22 +511,42 @@ function BookingModal({ homestay, onClose, onConfirm }: {
   const [guests, setGuests] = useState(1)
   const [specialRequests, setSpecialRequests] = useState('')
 
+  // Calculate number of nights
+  const getNights = () => {
+    if (!checkIn || !checkOut) return 0
+    const start = new Date(checkIn)
+    const end = new Date(checkOut)
+    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+  }
+
+  const nights = getNights()
+  const subtotal = homestay.price * nights
+  const cleaningFee = 500
+  const serviceFee = 300
+  const total = subtotal + cleaningFee + serviceFee
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onConfirm({ checkIn, checkOut, guests, specialRequests })
+    onConfirm({ 
+      checkIn, 
+      checkOut, 
+      guests, 
+      specialRequests,
+      nights,
+      subtotal,
+      total 
+    })
   }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
-          {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-primary">Book Your Stay</h3>
             <button onClick={onClose} className="text-gray-500 hover:text-accent text-2xl">✕</button>
           </div>
 
-          {/* Homestay Info */}
           <div className="flex gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
             <img 
               src={homestay.image} 
@@ -527,7 +560,6 @@ function BookingModal({ homestay, onClose, onConfirm }: {
             </div>
           </div>
 
-          {/* Booking Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -536,6 +568,7 @@ function BookingModal({ homestay, onClose, onConfirm }: {
                   type="date"
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent"
                   required
                 />
@@ -546,6 +579,7 @@ function BookingModal({ homestay, onClose, onConfirm }: {
                   type="date"
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn || new Date().toISOString().split('T')[0]}
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent"
                   required
                 />
@@ -576,25 +610,25 @@ function BookingModal({ homestay, onClose, onConfirm }: {
               />
             </div>
 
-            {/* Price Breakdown */}
+            {/* Price Breakdown - Updated with dynamic calculation */}
             <div className="bg-gray-50 p-4 rounded-xl">
               <h4 className="font-semibold text-primary mb-3">Price Details</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>₹{homestay.price} x 2 nights</span>
-                  <span>₹{homestay.price * 2}</span>
+                  <span>₹{homestay.price} x {nights} {nights === 1 ? 'night' : 'nights'}</span>
+                  <span>₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Cleaning fee</span>
-                  <span>₹500</span>
+                  <span>₹{cleaningFee}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Service fee</span>
-                  <span>₹300</span>
+                  <span>₹{serviceFee}</span>
                 </div>
                 <div className="border-t pt-2 font-semibold flex justify-between">
                   <span>Total</span>
-                  <span className="text-accent">₹{homestay.price * 2 + 800}</span>
+                  <span className="text-accent">₹{total}</span>
                 </div>
               </div>
             </div>
@@ -603,7 +637,7 @@ function BookingModal({ homestay, onClose, onConfirm }: {
               type="submit"
               className="w-full bg-accent text-white py-4 rounded-lg font-semibold hover:bg-opacity-90 transition"
             >
-              Confirm Booking
+              Confirm & Proceed to Payment
             </button>
           </form>
         </div>

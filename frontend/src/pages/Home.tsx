@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <div className="bg-secondary min-h-screen overflow-hidden">
-      
+
       {/* HERO SECTION - Enhanced with parallax effect */}
       <section className="relative bg-gradient-to-br from-primary via-primary to-primary-dark text-white overflow-hidden">
         {/* Background Pattern */}
@@ -43,22 +43,22 @@ export default function Home() {
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-accent/50 rounded-full blur-3xl"></div>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-6 sm:px-10 py-16 md:py-24">
           <div className={`grid lg:grid-cols-2 gap-12 items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            
+
             {/* Left Content */}
             <div>
               <div className="inline-block bg-accent/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-6">
                 🌿 Welcome to Smart Tourism
               </div>
-              
+
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
                 Explore Jharkhand{' '}
                 <span className="text-accent relative inline-block">
                   Digitally
                   <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 100 5" preserveAspectRatio="none">
-                    <path d="M0,5 L100,5" stroke="#FF6B35" strokeWidth="2" strokeDasharray="5 5"/>
+                    <path d="M0,5 L100,5" stroke="#FF6B35" strokeWidth="2" strokeDasharray="5 5" />
                   </svg>
                 </span>
               </h1>
@@ -72,8 +72,8 @@ export default function Home() {
               <HomeSearch />
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link 
-                  to="/destinations" 
+                <Link
+                  to="/destinations"
                   className="group bg-accent px-8 py-4 rounded-lg font-semibold hover:bg-accent-dark transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
                 >
                   <span className="flex items-center gap-2">
@@ -81,8 +81,8 @@ export default function Home() {
                     <span className="group-hover:translate-x-1 transition">→</span>
                   </span>
                 </Link>
-                <Link 
-                  to="/map" 
+                <Link
+                  to="/map"
                   className="group border-2 border-white/30 backdrop-blur-sm px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all"
                 >
                   <span className="flex items-center gap-2">
@@ -105,8 +105,8 @@ export default function Home() {
             <div className="hidden lg:block relative">
               <div className="relative h-96">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-accent to-accent-dark rounded-2xl rotate-12 transform hover:rotate-6 transition-all duration-500 shadow-2xl overflow-hidden group">
-                  <img 
-                    src="https://images.unsplash.com/photo-1625505826533-5c80aca7d656?w=400" 
+                  <img
+                    src="https://s7ap1.scene7.com/is/image/incredibleindia/netarhat-dam-ranchi-jharkhand-2-attr-hero?qlt=82&ts=1727010840630"
                     alt="Netarhat"
                     className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
                   />
@@ -115,8 +115,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="absolute bottom-0 left-0 w-56 h-56 bg-gradient-to-br from-primary-light to-primary rounded-2xl -rotate-6 transform hover:rotate-0 transition-all duration-500 shadow-2xl overflow-hidden group">
-                  <img 
-                    src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400" 
+                  <img
+                    src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400"
                     alt="Hundru Falls"
                     className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
                   />
@@ -132,7 +132,7 @@ export default function Home() {
         {/* Wave Divider */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,120 C480,120 960,0 1440,0 L1440,120 L0,120 Z" fill="#F5F5F5"/>
+            <path d="M0,120 C480,120 960,0 1440,0 L1440,120 L0,120 Z" fill="#F5F5F5" />
           </svg>
         </div>
       </section>
@@ -151,27 +151,27 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard 
-              icon="🗺️" 
-              title="GIS Navigation" 
+            <FeatureCard
+              icon="🗺️"
+              title="GIS Navigation"
               desc="Real-time route planning with eco-sensitive zone alerts and smart navigation"
               delay={100}
             />
-            <FeatureCard 
-              icon="🤖" 
-              title="AI Recommendation" 
+            <FeatureCard
+              icon="🤖"
+              title="AI Recommendation"
               desc="Personalized trip suggestions based on your interests and preferences"
               delay={200}
             />
-            <FeatureCard 
-              icon="🕶️" 
-              title="AR / VR" 
+            <FeatureCard
+              icon="🕶️"
+              title="AR / VR"
               desc="Virtual exploration of waterfalls, forests, and tribal villages from home"
               delay={300}
             />
-            <FeatureCard 
-              icon="🏡" 
-              title="Community Tourism" 
+            <FeatureCard
+              icon="🏡"
+              title="Community Tourism"
               desc="Book authentic homestays and buy directly from local artisans"
               delay={400}
             />
@@ -189,22 +189,22 @@ export default function Home() {
                 Popular Destinations
               </h2>
             </div>
-            <Link 
-              to="/destinations" 
+            <Link
+              to="/destinations"
               className="group flex items-center gap-2 text-accent font-semibold hover:gap-3 transition-all"
             >
               View All Destinations
               <span className="group-hover:translate-x-1 transition">→</span>
             </Link>
           </div>
-          
+
           <ErrorBoundary
             fallback={
               <div className="text-center p-16 bg-gray-50 rounded-2xl">
                 <div className="text-5xl mb-4">😕</div>
                 <p className="text-gray-600 text-lg">Unable to load destinations</p>
                 <p className="text-sm text-gray-500 mt-2">Please refresh the page to try again</p>
-                <button 
+                <button
                   onClick={() => window.location.reload()}
                   className="mt-6 bg-accent text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition"
                 >
@@ -228,18 +228,18 @@ export default function Home() {
                 Experience Jharkhand in Virtual Reality
               </h2>
               <p className="text-gray-200 mb-8">
-                Can't travel physically? Explore our 360° VR tours of waterfalls, forests, and tribal villages. 
+                Can't travel physically? Explore our 360° VR tours of waterfalls, forests, and tribal villages.
                 Experience the culture, sounds, and beauty from anywhere in the world.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link 
-                  to="/vr-experience" 
+                <Link
+                  to="/vr-experience"
                   className="bg-accent px-8 py-4 rounded-lg font-semibold hover:bg-accent-dark transition"
                 >
                   Try VR Experience
                 </Link>
-                <Link 
-                  to="/ar-experience" 
+                <Link
+                  to="/ar-experience"
                   className="border-2 border-white/30 backdrop-blur-sm px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition"
                 >
                   AR Guides
@@ -247,20 +247,25 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-video bg-black/20 rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1625505826533-5c80aca7d656?w=800" 
-                  alt="VR Experience"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🕶️</div>
-                    <p className="text-white text-lg font-semibold">360° Virtual Tour</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <div className="aspect-video bg-black/20 rounded-2xl overflow-hidden shadow-2xl">
+
+    <iframe
+      className="w-full h-full"
+      src="https://www.youtube.com/embed/aAYUoBpaXT0?autoplay=1&mute=1&loop=1&playlist=aAYUoBpaXT0"
+      frameBorder="0"
+      allow="autoplay; fullscreen"
+      allowFullScreen
+    ></iframe>
+
+    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-6xl mb-4">🕶️</div>
+        <p className="text-white text-lg font-semibold">360° Virtual Tour</p>
+      </div>
+    </div>
+
+  </div>
+</div>
           </div>
         </div>
       </section>
@@ -291,8 +296,8 @@ export default function Home() {
                 Travel Stories & Guides
               </h2>
             </div>
-            <Link 
-              to="/blog" 
+            <Link
+              to="/blog"
               className="group flex items-center gap-2 text-accent font-semibold hover:gap-3 transition-all"
             >
               Read All Stories
@@ -301,19 +306,19 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <BlogCard 
-              image="https://images.unsplash.com/photo-1625505826533-5c80aca7d656?w=400"
+            <BlogCard
+              image="https://www.google.com/imgres?q=hidden%20waterfall%20in%20jharkhand&imgurl=https%3A%2F%2Ftripxl.com%2Fblog%2Fwp-content%2Fuploads%2F2024%2F09%2FNetarhat-waterfalls-OG-Image.jpg&imgrefurl=https%3A%2F%2Ftripxl.com%2Fblog%2Fnetarhat-waterfalls%2F&docid=RzD3McWrLqJaCM&tbnid=TyrIA_NQisL_uM&vet=12ahUKEwia4b3h3q2TAxXV-TgGHcKgBjoQnPAOegQIGBAB..i&w=850&h=425&hcb=2&ved=2ahUKEwia4b3h3q2TAxXV-TgGHcKgBjoQnPAOegQIGBAB"
               title="Hidden Waterfalls of Jharkhand"
               excerpt="Discover 5 lesser-known waterfalls perfect for monsoon trekking..."
               date="Mar 15, 2024"
             />
-            <BlogCard 
+            <BlogCard
               image="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400"
               title="A Guide to Tribal Festivals"
               excerpt="Experience the vibrant Sarhul, Karma, and Sohrai festivals..."
               date="Mar 10, 2024"
             />
-            <BlogCard 
+            <BlogCard
               image="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400"
               title="Wildlife Safari at Betla"
               excerpt="Complete guide to spotting tigers, elephants, and bisons..."
@@ -330,7 +335,7 @@ export default function Home() {
           <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
         </div>
-        
+
         <div className="relative max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready for a Smart Adventure?
@@ -398,8 +403,8 @@ function BlogCard({ image, title, excerpt, date }: { image: string; title: strin
   return (
     <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       <div className="relative h-48 overflow-hidden">
-        <img 
-          src={image} 
+        <img
+          src={image}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
         />
@@ -410,8 +415,8 @@ function BlogCard({ image, title, excerpt, date }: { image: string; title: strin
           {title}
         </h3>
         <p className="text-gray-600 text-sm mb-4">{excerpt}</p>
-        <Link 
-          to="/blog" 
+        <Link
+          to="/blog"
           className="inline-flex items-center gap-1 text-accent font-semibold text-sm hover:gap-2 transition-all"
         >
           Read More <span>→</span>
