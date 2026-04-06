@@ -7,10 +7,7 @@ export interface Destination {
   images?: string[]
   description?: string
   category?: string
-  rating?: {
-    average: number
-    count: number
-  }
+  rating?: number;
   nearby?: string[]
   location?: string
   coordinates?: {

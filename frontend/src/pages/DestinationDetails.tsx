@@ -242,7 +242,7 @@ export default function DestinationDetails() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 grid grid-cols-2 md:grid-cols-5 gap-6">
   <div className="text-center">
     <div className="text-3xl mb-2">⭐</div>
-    <div className="font-bold text-primary">{destination.rating?.average?.toFixed(1) || '4.5'}</div>
+    <div className="font-bold text-primary">{destination.rating?.toFixed(1) || '4.5'}</div>
     <div className="text-sm text-gray-500">Rating</div>
   </div>
   <div className="text-center">
@@ -553,7 +553,7 @@ export default function DestinationDetails() {
               {/* Rating Summary */}
               <div className="flex items-center gap-8 p-6 bg-gray-50 rounded-xl flex-wrap">
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-primary">{destination.rating?.average?.toFixed(1) || '4.5'}</div>
+                  <div className="text-5xl font-bold text-primary">{destination.rating?.toFixed(1) || '4.5'}</div>
                   <div className="text-accent text-xl">★★★★☆</div>
                   <div className="text-sm text-gray-500 mt-1">128 reviews</div>
                 </div>

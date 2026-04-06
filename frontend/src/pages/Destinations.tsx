@@ -91,7 +91,7 @@ export default function Destinations() {
         result.sort((a, b) => a.name.localeCompare(b.name))
         break
       case 'rating':
-        result.sort((a, b) => (b.rating?.average || 0) - (a.rating?.average || 0))
+        result.sort((a, b) => (b.rating || 0) - (a.rating || 0))
         break
       default: // popularity
         result.sort((a, b) => (b.visitors || 0) - (a.visitors || 0))
@@ -349,13 +349,13 @@ function PaginationButton({ children, active = false }: { children: React.ReactN
 }
 
 function DestinationListItem({ destination }: { destination: Destination }) {
-  const ratingValue = destination.rating?.average || 4.5
+  const ratingValue = destination.rating ?? 4.5
   
   return (
     <Link to={`/destinations/${destination.id}`}>
       <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition p-4 flex gap-6">
         <img
-          src={destination.image || (destination.images?.[0]?.url) || 'https://via.placeholder.com/150'}
+          src={destination.image || (destination.images?.[0]) || 'https://via.placeholder.com/150'}
           alt={destination.name}
           className="w-32 h-32 rounded-lg object-cover"
           onError={(e) => {
