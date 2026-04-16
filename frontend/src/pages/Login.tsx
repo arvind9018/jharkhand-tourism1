@@ -7,6 +7,7 @@ import FacebookLogin from '@greatsumini/react-facebook-login';
 
 import { loginUser } from '../services/authApi';
 
+
 export default function Login() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -15,8 +16,27 @@ export default function Login() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [showDemo, setShowDemo] = useState(false);
 // Replace with your Facebook App ID
   const FACEBOOK_APP_ID = '3014044502129811';
+
+// Demo Users Data
+  const demoUsers = [
+  { name: "👑 Admin", email: "admin@jharkhandtourism.com", password: "admin123", color: "bg-purple-100 text-purple-800" },
+  { name: "🎨 Artisan", email: "birsa@dokraart.com", password: "artisan123", color: "bg-orange-100 text-orange-800" },
+  { name: "🏡 Homestay Owner", email: "rajesh@homestay.com", password: "owner123", color: "bg-green-100 text-green-800" },
+  { name: "🧭 Tour Guide", email: "guide@santhal.com", password: "guide123", color: "bg-blue-100 text-blue-800" },
+  { name: "🛍️ Vendor", email: "vijay@handicrafts.com", password: "vendor123", color: "bg-pink-100 text-pink-800" },
+  { name: "👤 Regular User", email: "user@example.com", password: "user123", color: "bg-gray-100 text-gray-800" }
+];
+
+// Add this function
+const fillDemo = (email: string, password: string) => {
+  setForm({ email, password });
+  setError('');
+};
+
 
   // Google Login
   const googleLogin = useGoogleLogin({
@@ -183,6 +203,33 @@ export default function Login() {
                 </p>
               </div>
             )}
+
+            <div className="mb-6">
+  <button
+    onClick={() => setShowDemo(!showDemo)}
+    className="w-full text-sm text-accent font-semibold flex items-center justify-center gap-2 mb-3 hover:underline"
+  >
+    <span>🔐</span> Quick Demo Login <span>{showDemo ? '▲' : '▼'}</span>
+  </button>
+  
+  {showDemo && (
+    <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+      <p className="text-xs text-gray-500 mb-3 text-center">Click any role to auto-fill:</p>
+      <div className="grid grid-cols-2 gap-2">
+        {demoUsers.map((user, idx) => (
+          <button
+            key={idx}
+            onClick={() => fillDemo(user.email, user.password)}
+            className={`px-3 py-2 rounded-lg text-xs font-medium text-left ${user.color} border hover:scale-105 transition`}
+          >
+            <div>{user.name}</div>
+            <div className="text-[10px] opacity-75 font-mono truncate">{user.email}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5">

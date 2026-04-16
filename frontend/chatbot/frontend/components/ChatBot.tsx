@@ -50,16 +50,7 @@ const ChatBot = () => {
   }, [isOpen]);
 
   // Auto-open effect when page loads (only once)
-  useEffect(() => {
-    if (!hasAutoOpened) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        setHasAutoOpened(true);
-      }, 1000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [hasAutoOpened]);
+  
 
   const send = async () => {
     if (!message.trim() || isLoading) return;
