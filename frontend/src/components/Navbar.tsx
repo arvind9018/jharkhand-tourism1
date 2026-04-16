@@ -116,6 +116,25 @@ export default function Navbar() {
         return '👤'
     }
   }
+  // For Artisan - Show "My Products"
+{userRole === 'artisan' && (
+  <Link to="/my-products">My Products</Link>
+)}
+
+// For Homestay Owner - Show "My Properties"
+{userRole === 'homestay_owner' && (
+  <Link to="/owner/properties">My Properties</Link>
+)}
+
+// For Guide - Show "My Tours"
+{userRole === 'guide' && (
+  <Link to="/guide/tours">My Tours</Link>
+)}
+
+// For Vendor - Show "My Shop"
+{userRole === 'vendor' && (
+  <Link to="/my-shop">My Shop</Link>
+)}
 
   return (
     <nav className="bg-primary text-white shadow-md sticky top-0 z-50">
@@ -228,7 +247,7 @@ export default function Navbar() {
                     
                     {userRole === 'homestay_owner' && (
                       <Link
-                        to="/my-properties"
+                        to="/owner/properties"
                         className="block px-4 py-2 hover:bg-gray-100 transition"
                         onClick={() => setUserMenuOpen(false)}
                       >
@@ -238,7 +257,7 @@ export default function Navbar() {
                     
                     {userRole === 'guide' && (
                       <Link
-                        to="/my-tours"
+                        to="/guide/tours"
                         className="block px-4 py-2 hover:bg-gray-100 transition"
                         onClick={() => setUserMenuOpen(false)}
                       >

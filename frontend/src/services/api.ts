@@ -189,6 +189,9 @@ const mockProducts: Product[] = [
   }
 ]
 
+
+
+
 // Mock stats
 const mockStats: StatsData = {
   destinations: 50,
@@ -612,3 +615,121 @@ export const getMockDestinations = () => mockDestinations
 export const getMockHomestays = () => mockHomestays
 export const getMockProducts = () => mockProducts
 export const getMockStats = () => mockStats
+
+
+// frontend/src/services/api.js - Add these functions
+
+// ==================== CART API ====================
+export const getCart = async () => {
+  const response = await api.get('/cart');
+  return response.data;
+};
+
+export const addToCart = async (productId, quantity = 1) => {
+  const response = await api.post('/cart/add', { productId, quantity });
+  return response.data;
+};
+
+export const updateCartItem = async (productId, quantity) => {
+  const response = await api.put('/cart/update', { productId, quantity });
+  return response.data;
+};
+
+export const removeFromCart = async (productId) => {
+  const response = await api.delete(`/cart/remove/${productId}`);
+  return response.data;
+};
+
+export const clearCart = async () => {
+  const response = await api.delete('/cart/clear');
+  return response.data;
+};
+
+// ==================== ORDER API ====================
+export const createOrder = async (shippingAddress) => {
+  const response = await api.post('/orders', { shippingAddress });
+  return response.data;
+};
+
+export const getUserOrders = async () => {
+  const response = await api.get('/orders');
+  return response.data;
+};
+
+export const getArtisanOrders = async () => {
+  const response = await api.get('/orders/artisan');
+  return response.data;
+};
+
+// ==================== PROPERTY API (Owner) ====================
+export const getMyProperties = async () => {
+  const response = await api.get('/properties');
+  return response.data;
+};
+
+export const createProperty = async (data) => {
+  const response = await api.post('/properties', data);
+  return response.data;
+};
+
+export const updateProperty = async (id, data) => {
+  const response = await api.put(`/properties/${id}`, data);
+  return response.data;
+};
+
+export const deleteProperty = async (id) => {
+  const response = await api.delete(`/properties/${id}`);
+  return response.data;
+};
+
+export const getPropertyBookings = async () => {
+  const response = await api.get('/properties/bookings');
+  return response.data;
+};
+
+// ==================== TOUR API (Guide) ====================
+export const getMyTours = async () => {
+  const response = await api.get('/tours');
+  return response.data;
+};
+
+export const createTour = async (data) => {
+  const response = await api.post('/tours', data);
+  return response.data;
+};
+
+export const updateTour = async (id, data) => {
+  const response = await api.put(`/tours/${id}`, data);
+  return response.data;
+};
+
+export const deleteTour = async (id) => {
+  const response = await api.delete(`/tours/${id}`);
+  return response.data;
+};
+
+export const getTourBookings = async () => {
+  const response = await api.get('/tours/bookings');
+  return response.data;
+};
+
+// ==================== SHOP API (Vendor) ====================
+export const getMyShop = async () => {
+  const response = await api.get('/shop');
+  return response.data;
+};
+
+export const updateShop = async (data) => {
+  const response = await api.put('/shop', data);
+  return response.data;
+};
+
+export const getInventory = async () => {
+  const response = await api.get('/shop/inventory');
+  return response.data;
+};
+
+export const updateInventory = async (id, quantity, inStock) => {
+  const response = await api.put(`/shop/inventory/${id}`, { quantity, inStock });
+  return response.data;
+};

@@ -1,8 +1,8 @@
 // src/pages/VendorDashboard.tsx
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { getStoredUser } from "../services/authApi"
-import DashboardCard from "../components/DashboardCard"
+import { getStoredUser } from "../../services/authApi"
+import DashboardCard from "../../components/DashboardCard"
 
 export default function VendorDashboard() {
   const [user, setUser] = useState(getStoredUser())
@@ -20,37 +20,37 @@ export default function VendorDashboard() {
             icon="🛍️"
             title="My Shop"
             description="Manage your shop"
-            link="/my-shop"
+            link="/vendor/my-shop"
           />
           <DashboardCard
             icon="📦"
             title="Orders"
             description="View customer orders"
-            link="/shop-orders"
+            link="/vendor/shop-orders"
           />
           <DashboardCard
             icon="💰"
             title="Earnings"
             description="Track your sales"
-            link="/earnings"
+            link="/vendor/earnings"
           />
           <DashboardCard
             icon="📊"
             title="Inventory"
             description="Manage your inventory"
-            link="/inventory"
+            link="/vendor/inventory"
           />
           <DashboardCard
             icon="⭐"
             title="Reviews"
             description="Customer reviews"
-            link="/shop-reviews"
+            link="/vendor/shop-reviews"
           />
           <DashboardCard
             icon="📈"
             title="Analytics"
             description="View sales analytics"
-            link="/vendor-analytics"
+            link="/vendor/analytics"
           />
         </div>
 

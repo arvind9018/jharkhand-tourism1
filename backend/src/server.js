@@ -9,6 +9,13 @@ import destinationRoutes from './routes/destination.routes.js';
 import homestayRoutes from './routes/homestay.routes.js';
 import productRoutes from './routes/product.routes.js';
 
+
+import orderRoutes from './routes/order.routes.js';
+import cartRoutes from './routes/cart.routes.js';
+import propertyRoutes from './routes/property.routes.js';
+import tourRoutes from './routes/tour.routes.js';
+import shopRoutes from './routes/shop.routes.js';
+
 dotenv.config();
 
 const app = express();
@@ -32,6 +39,13 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/homestays', homestayRoutes);
 app.use('/api/products', productRoutes);
+
+
+app.use('/api/orders', orderRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/properties', propertyRoutes);
+app.use('/api/tours', tourRoutes);
+app.use('/api/shop', shopRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

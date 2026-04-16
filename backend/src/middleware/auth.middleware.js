@@ -57,3 +57,5 @@ export const protect = async (req, res, next) => {
     });
   }
 };
+// ✅ ADD THIS LINE - Creates alias for authenticate
+export const authenticate = protect;

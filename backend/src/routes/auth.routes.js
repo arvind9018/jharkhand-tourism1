@@ -9,6 +9,7 @@ import {
   changePassword
 } from '../controllers/auth.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
+import { getUserPermissions } from '../middleware/permission.middleware.js';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.model.js';
@@ -199,5 +200,6 @@ router.get('/me', getMe);
 router.put('/profile', updateProfile);
 router.post('/change-password', changePassword);
 router.post('/logout', logout);
-
+// Add this with other protected routes
+router.get('/permissions', protect,getUserPermissions);
 export default router;

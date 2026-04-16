@@ -850,6 +850,17 @@ export const resetPassword = async (data: { token: string; newPassword: string }
   return response.data
 }
 
+// Get current user's permissions
+export const getUserPermissions = async () => {
+  try {
+    const response = await api.get('/auth/permissions');
+    return response.data.data;
+  } catch (error) {
+    console.error('Get permissions error:', error);
+    return null;
+  }
+};
+
 export const verifyEmail = async (token: string) => {
   const response = await api.get(`/auth/verify-email/${token}`)
   return response.data

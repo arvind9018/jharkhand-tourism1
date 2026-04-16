@@ -11,10 +11,7 @@ import Homestays from "./pages/Homestays"
 import Marketplace from "./pages/Marketplace"
 import AdminDashboard from "./pages/AdminDashboard"
 import UserDashboard from "./pages/UserDashboard"
-import GuideDashboard from "./pages/GuideDashboard"
-import ArtisanDashboard from "./pages/ArtisanDashboard"
-import OwnerDashboard from "./pages/OwnerDashboard"
-import VendorDashboard from "./pages/VendorDashboard"
+
 import Profile from "./pages/Profile"
 import Bookings from "./pages/Bookings"
 import Login from "./pages/Login"
@@ -27,6 +24,11 @@ import Contact from "./pages/Contact"
 import Payment from './pages/Payment';
 import PaymentSuccess from './pages/PaymentSuccess';
 import BookingDetails from './pages/BookingDetails';
+
+import VendorReviews from './pages/vendor/VendorReviews';
+import VendorAnalytics from './pages/vendor/VendorAnalytics';
+import VendorEarnings from './pages/vendor/VendorEarnings';
+
 
 import { AuthProvider } from "./context/AuthContext"
 
@@ -51,6 +53,36 @@ import HelpCenter from './pages/HelpCenter';
 import TravelGuidelines from './pages/TravelGuidelines';
 import SafetyAlerts from './pages/SafetyAlerts';
 import VRExperience from './pages/VRExperience';
+import ArtisanDashboard from './pages/artisan/ArtisanDashboard';
+import MyProducts from './pages/artisan/MyProducts';
+import ArtisanOrders from './pages/artisan/Orders';
+import VendorDashboard from './pages/vendor/VendorDashboard';
+import OwnerDashboard from './pages/owner/OwnerDashboard';
+import GuideDashboard from './pages/guide/GuideDashboard';
+
+import MyShop from './pages/vendor/MyShop';
+import ShopOrders from './pages/vendor/ShopOrders';
+import Inventory from './pages/vendor/Inventory';
+import MyProperties from './pages/owner/MyProperties';
+import MyTours from './pages/guide/MyTours';
+
+import TourBookings from './pages/guide/TourBookings';
+import GuideEarnings from './pages/guide/GuideEarnings';
+import GuideReviews from './pages/guide/GuideReviews';
+import GuideAnalytics from './pages/guide/GuideAnalytics';
+import GuideSchedule from './pages/guide/GuideSchedule';
+
+import PropertyBookings from './pages/owner/PropertyBookings';
+import OwnerEarnings from './pages/owner/OwnerEarnings';
+import PropertyReviews from './pages/owner/PropertyReviews';
+import OwnerAnalytics from './pages/owner/OwnerAnalytics';
+import OwnerAlerts from "./pages/owner/OwnerAlerts";
+
+import ArtisanEarnings from './pages/artisan/ArtisanEarnings';
+import ProductReviews from './pages/artisan/ProductReviews';
+import ArtisanAnalytics from './pages/artisan/ArtisanAnalytics';
+import ShopProfile from './pages/artisan/ShopProfile';
+
 
 
 import { CartProvider } from './context/CartContext';
@@ -146,6 +178,32 @@ export default function App() {
 <Route path="/payment-success" element={<PaymentSuccess />} />
 <Route path="/bookings/:id" element={<BookingDetails />} />
 <Route path="/cart" element={<Cart />} />
+<Route path="/vendor/shop" element={<MyShop />} />
+<Route path="/vendor/orders" element={<ShopOrders />} />
+<Route path="/vendor/inventory" element={<Inventory />} />
+<Route path="/owner/properties" element={<MyProperties />} />
+<Route path="/guide/tours" element={<MyTours />} />
+<Route path="/guide/bookings" element={<TourBookings />} />
+<Route path="/guide/earnings" element={<GuideEarnings />} />
+<Route path="/guide/reviews" element={<GuideReviews />} />
+<Route path="/guide/analytics" element={<GuideAnalytics />} />
+<Route path="/guide/schedule" element={<GuideSchedule />} />
+
+<Route path="/owner/bookings" element={<PropertyBookings />} />
+<Route path="/owner/earnings" element={<OwnerEarnings />} />
+<Route path="/owner/reviews" element={<PropertyReviews />} />
+<Route path="/owner/analytics" element={<OwnerAnalytics />} />
+<Route path="/owner/alerts" element={<OwnerAlerts />} />
+
+
+<Route path="/vendor/reviews" element={<VendorReviews />} />
+<Route path="/vendor/analytics" element={<VendorAnalytics />} />
+<Route path="/vendor/earnings" element={<VendorEarnings />} />
+
+<Route path="/artisan/earnings" element={<ArtisanEarnings />} />
+<Route path="/artisan/reviews" element={<ProductReviews />} />
+<Route path="/artisan/analytics" element={<ArtisanAnalytics />} />
+<Route path="/artisan/shop-profile" element={<ShopProfile />} />
 
         {/* Auth Routes (Public but redirect if logged in) */}
         <Route path="/login" element={
@@ -203,7 +261,6 @@ export default function App() {
             <OwnerDashboard />
           </ProtectedRoute>
         } />
-        
         <Route path="/vendor-dashboard" element={
           <ProtectedRoute allowedRoles={['vendor', 'admin']}>
             <VendorDashboard />
@@ -213,31 +270,37 @@ export default function App() {
         {/* Role-Specific Management Pages */}
         <Route path="/my-products" element={
           <ProtectedRoute allowedRoles={['artisan', 'admin']}>
-            <div>My Products Page</div>
+            <MyProducts />
           </ProtectedRoute>
         } />
         
         <Route path="/my-properties" element={
           <ProtectedRoute allowedRoles={['homestay_owner', 'admin']}>
-            <div>My Properties Page</div>
+            <OwnerDashboard />
           </ProtectedRoute>
         } />
         
         <Route path="/my-tours" element={
           <ProtectedRoute allowedRoles={['guide', 'admin']}>
-            <div>My Tours Page</div>
+            <GuideDashboard />
           </ProtectedRoute>
         } />
         
         <Route path="/my-shop" element={
           <ProtectedRoute allowedRoles={['vendor', 'admin']}>
-            <div>My Shop Page</div>
+            <VendorDashboard />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/artisan/orders" element={
+          <ProtectedRoute allowedRoles={['artisan', 'admin']}>
+            <ArtisanOrders />
           </ProtectedRoute>
         } />
         
         <Route path="/orders" element={
           <ProtectedRoute allowedRoles={['artisan', 'vendor', 'admin']}>
-            <div>Orders Page</div>
+            <ArtisanOrders />
           </ProtectedRoute>
         } />
         

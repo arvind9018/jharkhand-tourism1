@@ -1,12 +1,13 @@
 // src/pages/OwnerDashboard.tsx
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { getStoredUser } from "../services/authApi"
-import DashboardCard from "../components/DashboardCard"
+import { getStoredUser } from "../../services/authApi"
+import DashboardCard from "../../components/DashboardCard"
 
 export default function OwnerDashboard() {
   const [user, setUser] = useState(getStoredUser())
 
+  const newLocal = "/owner/analytics"
   return (
     <div className="min-h-screen bg-secondary py-10 px-6">
       <div className="max-w-7xl mx-auto">
@@ -20,37 +21,37 @@ export default function OwnerDashboard() {
             icon="🏡"
             title="My Properties"
             description="Manage your homestays"
-            link="/my-properties"
+            link="/owner/properties"
           />
           <DashboardCard
             icon="📅"
             title="Bookings"
             description="View and manage bookings"
-            link="/property-bookings"
+            link="/owner/bookings"
           />
           <DashboardCard
             icon="💰"
             title="Earnings"
             description="Track your revenue"
-            link="/earnings"
+            link="/owner/earnings"
           />
           <DashboardCard
             icon="⭐"
             title="Reviews"
             description="Guest reviews"
-            link="/property-reviews"
+            link="/owner/reviews"
           />
           <DashboardCard
             icon="📊"
             title="Analytics"
             description="View occupancy analytics"
-            link="/owner-analytics"
+            link={newLocal}
           />
           <DashboardCard
             icon="🔔"
             title="Alerts"
             description="View booking alerts"
-            link="/owner-alerts"
+            link="/owner/alerts"
           />
         </div>
 
