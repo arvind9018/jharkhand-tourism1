@@ -11,6 +11,20 @@ export const api = axios.create({
   },
 })
 
+// Add JWT token interceptor for authenticated requests
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // ==================== TYPES ====================
 
 export interface StatsData {

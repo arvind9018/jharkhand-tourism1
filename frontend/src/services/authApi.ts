@@ -33,6 +33,7 @@ export interface SignupData {
 }
 
 export interface User {
+  isActive: any;
   id: string;
   name: string;
   email: string;
@@ -581,133 +582,7 @@ export const fetchEnvironmentalData = async (): Promise<EnvironmentalData> => {
 
 // ==================== USER MANAGEMENT FUNCTIONS ====================
 
-/**
- * Get all users (admin only)
- */
-export const fetchUsers = async (params?: {
-  role?: string;
-  status?: string;
-  search?: string;
-  page?: number;
-  limit?: number;
-}): Promise<{ users: User[]; total: number }> => {
-  try {
-    const response = await api.get('/admin/users', { params });
-    return response.data.data;
-  } catch (error) {
-    console.error('Fetch users error:', error);
-    // Return mock data
-    const mockUsers: User[] = [
-      {
-        id: '1',
-        name: 'Admin User',
-        email: 'admin@example.com',
-        role: 'admin',
-        approvalStatus: 'approved',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '2',
-        name: 'John Doe',
-        email: 'john@example.com',
-        role: 'user',
-        approvalStatus: 'approved',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '3',
-        name: 'Jane Guide',
-        email: 'jane@example.com',
-        role: 'guide',
-        approvalStatus: 'pending',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '4',
-        name: 'Ram Artisan',
-        email: 'ram@example.com',
-        role: 'artisan',
-        approvalStatus: 'approved',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '5',
-        name: 'Sita Owner',
-        email: 'sita@example.com',
-        role: 'homestay_owner',
-        approvalStatus: 'pending',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '6',
-        name: 'Krishna Vendor',
-        email: 'krishna@example.com',
-        role: 'vendor',
-        approvalStatus: 'approved',
-        createdAt: new Date().toISOString()
-      }
-    ];
-    
-    let filtered = [...mockUsers];
-    if (params?.role && params.role !== 'all') {
-      filtered = filtered.filter(u => u.role === params.role);
-    }
-    if (params?.status && params.status !== 'all') {
-      filtered = filtered.filter(u => u.approvalStatus === params.status);
-    }
-    if (params?.search) {
-      const searchLower = params.search.toLowerCase();
-      filtered = filtered.filter(u => 
-        u.name.toLowerCase().includes(searchLower) ||
-        u.email.toLowerCase().includes(searchLower)
-      );
-    }
-    
-    return {
-      users: filtered,
-      total: filtered.length
-    };
-  }
-};
 
-/**
- * Update user role (admin only)
- */
-export const updateUserRole = async (userId: string, role: string): Promise<User> => {
-  try {
-    const response = await api.put(`/admin/users/${userId}/role`, { role });
-    return response.data.data;
-  } catch (error) {
-    console.error('Update user role error:', error);
-    throw error;
-  }
-};
-
-/**
- * Update user status (admin only)
- */
-export const updateUserStatus = async (userId: string, status: string): Promise<User> => {
-  try {
-    const response = await api.put(`/admin/users/${userId}/status`, { status });
-    return response.data.data;
-  } catch (error) {
-    console.error('Update user status error:', error);
-    throw error;
-  }
-};
-
-/**
- * Delete user (admin only)
- */
-export const deleteUser = async (userId: string): Promise<{ success: boolean; message: string }> => {
-  try {
-    const response = await api.delete(`/admin/users/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Delete user error:', error);
-    throw error;
-  }
-};
 
 // ==================== APPROVAL FUNCTIONS ====================
 
@@ -858,6 +733,172 @@ export const getUserPermissions = async () => {
   } catch (error) {
     console.error('Get permissions error:', error);
     return null;
+  }
+};
+
+// ==================== ADMIN FUNCTIONS ====================
+
+export interface UserFilters {
+  role?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface UserStatistics {
+  totalUsers: number;
+  activeUsers: number;
+  pendingApprovals: number;
+  roleDistribution: Array<{ _id: string; count: number }>;
+  recentUsers: User[];
+}
+
+// Get all users with filters
+// Fetch users with filters
+export const fetchUsers = async (params?: {
+  search?: string;
+  role?: string;
+  status?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}) => {
+  try {
+    const response = await api.get('/admin/users', { params });
+    
+    // Ensure each user has an id field (map _id to id)
+    const users = (response.data.data.users || []).map((user: any) => ({
+      ...user,
+      id: user._id || user.id  // Ensure id field exists
+    }));
+    
+    return {
+      users,
+      pagination: response.data.data.pagination,
+      statistics: response.data.data.statistics
+    };
+  } catch (error: any) {
+    console.error('Fetch users error:', error.response?.data || error.message);
+    return { users: [], pagination: {}, statistics: {} };
+  }
+};
+
+/**
+ * Update user role (admin only)
+ */
+// Update user role
+export const updateUserRole = async (userId: string, role: string): Promise<User> => {
+  try {
+    console.log('Updating user role:', { userId, role });
+    const response = await api.put(`/admin/users/${userId}/role`, { role });
+    
+    if (response.data.success) {
+      // Update stored user if it's the current user
+      const currentUser = getStoredUser();
+      if (currentUser && currentUser.id === userId) {
+        currentUser.role = role;
+        localStorage.setItem('user', JSON.stringify(currentUser));
+      }
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Failed to update role');
+  } catch (error: any) {
+    console.error('Update user role error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Update user status (activate/deactivate)
+export const updateUserStatus = async (userId: string, status: string): Promise<User> => {
+  try {
+    console.log('Updating user status:', { userId, status });
+    const isActive = status === 'approved';
+    const response = await api.put(`/admin/users/${userId}/status`, { isActive });
+    
+    if (response.data.success) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Failed to update status');
+  } catch (error: any) {
+    console.error('Update user status error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Delete user
+export const deleteUser = async (userId: string): Promise<{ success: boolean; message: string }> => {
+  try {
+    console.log('Deleting user:', userId);
+    const response = await api.delete(`/admin/users/${userId}`);
+    
+    if (response.data.success) {
+      // Clear stored user if it's the current user
+      const currentUser = getStoredUser();
+      if (currentUser && currentUser.id === userId) {
+        logoutUser();
+      }
+      return response.data;
+    }
+    throw new Error(response.data.message || 'Failed to delete user');
+  } catch (error: any) {
+    console.error('Delete user error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Get user by ID
+export const getUserById = async (userId: string): Promise<User | null> => {
+  try {
+    const response = await api.get(`/admin/users/${userId}`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return null;
+  }
+};
+
+
+// Get user statistics
+// Get user statistics
+export const getUserStatistics = async () => {
+  try {
+    const response = await api.get('/admin/users/statistics');
+    return response.data.data;
+  } catch (error: any) {
+    console.error('Get user statistics error:', error.response?.data || error.message);
+    return {
+      totalUsers: 0,
+      activeUsers: 0,
+      pendingApprovals: 0,
+      roleDistribution: [],
+      recentUsers: []
+    };
+  }
+};
+
+// Approve a request
+export const approveRequest = async (approvalId: string, role?: string, notes?: string) => {
+  try {
+    const response = await api.post(`/approvals/${approvalId}/approve`, { role, notes });
+    return response.data;
+  } catch (error) {
+    console.error('Error approving request:', error);
+    throw error;
+  }
+};
+
+// Reject a request
+export const rejectRequest = async (approvalId: string, reason: string) => {
+  try {
+    const response = await api.post(`/approvals/${approvalId}/reject`, { reason });
+    return response.data;
+  } catch (error) {
+    console.error('Error rejecting request:', error);
+    throw error;
   }
 };
 

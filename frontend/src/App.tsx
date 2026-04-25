@@ -9,7 +9,7 @@ import DestinationDetails from "./pages/DestinationDetails"
 import MapView from "./pages/MapView"
 import Homestays from "./pages/Homestays"
 import Marketplace from "./pages/Marketplace"
-import AdminDashboard from "./pages/AdminDashboard"
+import AdminDashboard from "./pages/admin/AdminDashboard"
 import UserDashboard from "./pages/UserDashboard"
 
 import Profile from "./pages/Profile"
