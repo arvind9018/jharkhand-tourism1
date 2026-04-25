@@ -1,0 +1,27 @@
+# render.yaml
+services:
+  - type: web
+    name: jharkhand-tourism-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://your-frontend-url.onrender.com
