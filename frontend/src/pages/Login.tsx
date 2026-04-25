@@ -44,7 +44,7 @@ const fillDemo = (email: string, password: string) => {
     try {
       setLoading(true);
       // Send to your backend
-      const response = await fetch('http://localhost:5000/api/auth/google', {
+      const response = await fetch('https://jharkhand-tourism1-1.onrender.com/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ access_token: tokenResponse.access_token })
@@ -69,7 +69,7 @@ const fillDemo = (email: string, password: string) => {
   const handleFacebookSuccess = async (response: any) => {
     try {
       setLoading(true);
-      const apiResponse = await fetch('http://localhost:5000/api/auth/facebook', {
+      const apiResponse = await fetch('https://jharkhand-tourism1-1.onrender.com/api/auth/facebook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accessToken: response.accessToken, userID: response.userID })
