@@ -1,7 +1,7 @@
 // src/services/authApi.ts
 import axios from 'axios';
 
-const API_URL = 'https://jharkhand-tourism1-1.onrender.com/';
+const API_URL = 'https://jharkhand-tourism1-1.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_URL,
