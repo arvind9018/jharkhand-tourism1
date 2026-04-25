@@ -3,7 +3,7 @@ import axios from "axios";
 export const sendChat = async (message: string) => {
 
   const res = await axios.post(
-    "http://localhost:5005/api/chat",
+    "https://jharkhand-tourism1-2.onrender.com/api/chat",
     { message }
   );
 
