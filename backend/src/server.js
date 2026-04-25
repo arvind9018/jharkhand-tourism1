@@ -8,28 +8,52 @@ import contactRoutes from './routes/contact.routes.js';
 import destinationRoutes from './routes/destination.routes.js';
 import homestayRoutes from './routes/homestay.routes.js';
 import productRoutes from './routes/product.routes.js';
-
-
 import orderRoutes from './routes/order.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import propertyRoutes from './routes/property.routes.js';
 import tourRoutes from './routes/tour.routes.js';
 import shopRoutes from './routes/shop.routes.js';
-
 import weatherRoutes from './routes/weather.routes.js';
-
 import approvalRoutes from './routes/approval.routes.js';
-
 import adminRoutes from './routes/admin.routes.js';
+
 dotenv.config();
 
 const app = express();
 
-// Middleware
+// ✅ UPDATED CORS Configuration for Production
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://jharkhand-tourism-bjmk.vercel.app',  // Your Vercel frontend
+  'https://*.vercel.app',                       // Any Vercel preview deployments
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174'],
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is allowed
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } 
+    // Allow any vercel.app subdomain (for preview deployments)
+    else if (origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    }
+    else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -44,19 +68,15 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/homestays', homestayRoutes);
 app.use('/api/products', productRoutes);
-
-
 app.use('/api/orders', orderRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/tours', tourRoutes);
 app.use('/api/shop', shopRoutes);
-
 app.use('/api/weather', weatherRoutes);
-
 app.use('/api/approvals', approvalRoutes);
-
 app.use('/api/admin', adminRoutes);
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ 
@@ -71,33 +91,13 @@ app.get('/', (req, res) => {
   res.json({
     message: 'Jharkhand Tourism API',
     version: '1.0.0',
+    status: 'running',
     endpoints: {
-      auth: {
-        signup: 'POST /api/auth/signup',
-        login: 'POST /api/auth/login',
-        me: 'GET /api/auth/me',
-        profile: 'PUT /api/auth/profile'
-      },
-      contact: {
-        send: 'POST /api/contact'
-      },
-      destinations: {
-        getAll: 'GET /api/destinations',
-        getFeatured: 'GET /api/destinations/featured',
-        getById: 'GET /api/destinations/:id',
-        getCategories: 'GET /api/destinations/categories',
-        getDistricts: 'GET /api/destinations/districts'
-      },
-      homestays: {
-        getAll: 'GET /api/homestays',
-        getById: 'GET /api/homestays/:id'
-      },
-      products: {
-        getAll: 'GET /api/products',
-        getByCategory: 'GET /api/products/category/:category',
-        getById: 'GET /api/products/:id'
-      },
-      health: 'GET /health'
+      auth: '/api/auth',
+      destinations: '/api/destinations',
+      homestays: '/api/homestays',
+      products: '/api/products',
+      health: '/health'
     }
   });
 });
