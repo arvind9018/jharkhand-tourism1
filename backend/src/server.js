@@ -27,6 +27,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'https://jharkhand-tourism-bjmk.vercel.app',  // Your Vercel frontend
+  'https://jharkhand-tourism1-8mzk.vercel.app/',
   'https://*.vercel.app',                       // Any Vercel preview deployments
   process.env.FRONTEND_URL
 ].filter(Boolean);
