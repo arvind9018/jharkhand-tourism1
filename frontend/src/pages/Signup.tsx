@@ -64,7 +64,7 @@ export default function Signup() {
         setLoading(true);
         setError('');
         
-        const response = await fetch('http://localhost:5000/api/auth/google', {
+        const response = await fetch('https://jharkhand-tourism1-1.onrender.com/api/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ access_token: tokenResponse.access_token })
@@ -94,7 +94,7 @@ export default function Signup() {
       setLoading(true);
       setError('');
       
-      const fbResponse = await fetch('http://localhost:5000/api/auth/facebook', {
+      const fbResponse = await fetch('https://jharkhand-tourism1-1.onrender.com/api/auth/facebook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
