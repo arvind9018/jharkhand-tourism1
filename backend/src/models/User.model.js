@@ -3,7 +3,16 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-
+approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'approved' // Change to 'pending' if you want admin approval
+  },
+  requestedRole: {
+    type: String,
+    enum: ['user', 'guide', 'artisan', 'homestay_owner', 'vendor'],
+    default: 'user'
+  },
   provider: {
     type: String,
     enum: ['local', 'google', 'facebook'],
@@ -59,6 +68,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+  
 
 });
 

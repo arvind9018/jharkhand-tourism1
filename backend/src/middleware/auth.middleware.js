@@ -59,3 +59,28 @@ export const protect = async (req, res, next) => {
 };
 // ✅ ADD THIS LINE - Creates alias for authenticate
 export const authenticate = protect;
+
+
+
+// ✅ Add restrictTo function
+export const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    const userRole = req.user?.role;
+    
+    if (!userRole) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized'
+      });
+    }
+    
+    if (!roles.includes(userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: `Access denied. Required role: ${roles.join(' or ')}`
+      });
+    }
+    
+    next();
+  };
+};

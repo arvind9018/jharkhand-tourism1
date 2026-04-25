@@ -16,6 +16,11 @@ import propertyRoutes from './routes/property.routes.js';
 import tourRoutes from './routes/tour.routes.js';
 import shopRoutes from './routes/shop.routes.js';
 
+import weatherRoutes from './routes/weather.routes.js';
+
+import approvalRoutes from './routes/approval.routes.js';
+
+import adminRoutes from './routes/admin.routes.js';
 dotenv.config();
 
 const app = express();
@@ -47,6 +52,11 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/tours', tourRoutes);
 app.use('/api/shop', shopRoutes);
 
+app.use('/api/weather', weatherRoutes);
+
+app.use('/api/approvals', approvalRoutes);
+
+app.use('/api/admin', adminRoutes);
 // Health check
 app.get('/health', (req, res) => {
   res.json({ 
