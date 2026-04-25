@@ -4,7 +4,7 @@ import type { Destination } from "../types/Destination"
 
 // Create axios instance with baseURL
 export const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://jharkhand-tourism1-1.onrender.com/api",
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
